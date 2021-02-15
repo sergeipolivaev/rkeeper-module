@@ -7,18 +7,13 @@ const path = require("path");
 const routes = require("./routes");
 const { start } = require("./demonXml");
 
-const args = process.argv;
-const addressServer = args[2];
-const addressKassa = args[3];
-const discountId = args[4];
+const { IP, PORT, IPKASSA, PORTKASSA, DISCOUNTID } = process.env;
 
-const addressServerSplitted = addressServer.split(":");
-const addressKassaSplitted = addressKassa.split(":");
-
-const ipServer = addressServerSplitted[0] || "0.0.0.0";
-const portServer = addressServerSplitted[1] || 9056;
-const ipKassa = addressKassaSplitted[0];
-const portKassa = addressKassaSplitted[1];
+const ipServer = IP || "0.0.0.0";
+const portServer = PORT || 9056;
+const ipKassa = IPKASSA;
+const portKassa = PORTKASSA;
+const discountId = DISCOUNTID;
 
 const server = http.createServer;
 const app = express();
