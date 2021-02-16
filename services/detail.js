@@ -4,16 +4,13 @@ const { js2xml } = require("xml-js");
 
 const writeFileAsync = promisify(writeFile);
 
-
 async function detail(payload) {
   const {
     guidOrder: guid_order,
     type
   } = payload;
 
-  if (type === "ADD") {
-    await createXmlRequest(guid_order);
-  }
+  if (type === "ADD") await createXmlRequest(guid_order);
 
   return true;
 }

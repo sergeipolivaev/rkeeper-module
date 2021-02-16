@@ -7,9 +7,7 @@ async function spend(payload) {
     type
   } = payload;
 
-  if (type === "PAY") {
-    await createXmlRequest(guid_order);
-  }
+  if (type === "PAY") await createXmlRequest(guid_order);
 
   return true;
 }

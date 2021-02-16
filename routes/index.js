@@ -21,13 +21,13 @@ router.post("/getClient", (req, res, next) => {
 
 router.post("/detail", (req, res, next) => {
   detail(req.body)
-    .then(data => res.status(200).send("200"))
+    .then(() => res.status(200).send("200"))
     .catch(err => next(err));
 });
 
 router.post("/spend", (req, res, next) => {
   spend(req.body)
-    .then(data => res.status(200).send("200"))
+    .then(() => res.status(200).send("200"))
     .catch(err => next(err));
 });
 

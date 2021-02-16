@@ -8,7 +8,7 @@ const checkResult = require("./checkResult");
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
 
-async function demon(path = "./", ipKassa, portKassa) {
+async function demon(path = "./", ipKassa, portKassa, discountId) {
   let filesInDir = await readDirAsync(path);
   const filesXml = filesInDir.filter(filename => /^(?!.*Res).*.xml/g.test(filename));
 
@@ -32,10 +32,10 @@ async function demon(path = "./", ipKassa, portKassa) {
       content: xml2js(file, { compact: true })
     };
     
-    await checkResult(fileObject, path);
+    await checkResult(fileObject, path, discountId);
   }
 
-  setTimeout(demon.bind(this, path, ipKassa, portKassa), 10000);
+  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
 }
 
 function start(path, ipKassa, portKassa) {

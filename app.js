@@ -34,7 +34,7 @@ server(app).listen(app.get("port"), app.get("ip"), (err) => {
   console.log("Press CTRL-C to stop\n");
 });
 
-start(path.resolve("./xml"), ipKassa, portKassa);
+start(path.resolve("./xml"), ipKassa, portKassa, discountId);
 
 function defaultContentTypeMiddleware (req, res, next) {
   req.headers["content-type"] = req.headers["content-type"] || "application/json";

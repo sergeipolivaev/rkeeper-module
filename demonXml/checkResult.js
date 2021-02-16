@@ -6,7 +6,7 @@ const httpError = require("http-errors");
 
 const unlinkAsync = promisify(unlink);
 
-async function checkResult(file, path) {
+async function checkResult(file, path, discountId) {
   const token = process.env.TOKEN;
   const { name, content } = file;
   const { CommandResult } = content.RK7QueryResult;
@@ -22,39 +22,41 @@ async function checkResult(file, path) {
     discountSum
   } = CommandResult.Order._attributes;
 
-  const sum_order = orderSum / 100;
   const commentSplitted = persistentComment.split(" ");
   const code_client = +commentSplitted[commentSplitted.length - 1];
   const guidCorrect = guid.replace(/{|}/g, "");
   const Session = CommandResult.Order.Session;
   let Discount = [];
+  let amount = -discountSum / 100;
 
   if (Array.isArray(Session)) {
     Session.forEach(item => {
       if (Array.isArray(item.Discount)) {
-        Discount.concat(item.Discount);
+        Discount = Discount.concat(item.Discount);
       } else {
         Discount.push(item.Discount);
       }
     });
   } else {
     if (Array.isArray(Session.Discount)) {
-      Discount.concat(Session.Discount);
+      Discount = Discount.concat(Session.Discount);
     } else {
       Discount.push(Session.Discount);
     }
   }
 
-  console.log("Discount =>", Discount);
-
   if (!Discount.length) {
-    console.log("not discounts");
     await removeRes(path, name);
     await removeReq(path, name);
     return;
   }
 
-  Discount = Discount.filter(item => item && !+item._attributes.deleted)
+  Discount = Discount.filter(item => 
+    item && 
+    !+item._attributes.deleted && 
+    item._attributes.code == discountId
+  )
+
   if (!Discount || !Discount.length) {
     await removeRes(path, name);
     await removeReq(path, name);
@@ -62,27 +64,19 @@ async function checkResult(file, path) {
   }
 
   Discount = Discount.map(item => item._attributes);
-  let code, amount;
+  Discount = Discount[Discount.length - 1];
 
-  if (Discount) {
-    Discount = Discount.length 
-      ? Discount[Discount.length - 1]
-      : Discount
-
-    code = Discount.code;
-    if (!code) {
-      await removeRes(path, name);
-      return
-    }
-
-    amount = -discountSum / 100;
-  } //else amount = -discountSum / 100
+  const code = Discount.code;
+  if (!code) {
+    await removeRes(path, name);
+    return
+  }
 
   if (!+paid || !+finished) return false;
 
   const body = { 
     company_number: code_client,
-    sum_order,
+    sum_order: orderSum / 100 + amount,
     payed_bonus: amount
   };
   const config = {
@@ -90,7 +84,7 @@ async function checkResult(file, path) {
       Authorization: token
     } 
   };
-  const [err, res] = await to(axios.post("https://dev.ldqr.ru/api/rkeeper/createTransaction", body, config));
+  const [err] = await to(axios.post("https://dev.ldqr.ru/api/rkeeper/createTransaction", body, config));
   if (err) throw httpError(500, "");
 
   await removeReq(path, name);
