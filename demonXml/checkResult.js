@@ -19,13 +19,21 @@ async function checkResult(file, path) {
     persistentComment,
     discountSum
   } = content.RK7QueryResult.CommandResult.Order._attributes;
+  const { CommandResult } = content.RK7QueryResult;
+  if (CommandResult.ErrorText) {
+    return;
+  }
+
   const sum_order = orderSum / 100;
   const commentSplitted = persistentComment.split(" ");
   const code_client = +commentSplitted[commentSplitted.length - 1];
   const guidCorrect = guid.replace(/{|}/g, "");
-  const Discounts = content.RK7QueryResult.CommandResult.Order.Session.Discount;
+  const Discounts = CommandResult.Order.Session.Discount;
   let Discount;
   let code, amount;
+
+  console.log("Session =>", CommandResult.Order.Session);
+  console.log("Discount =>", Discounts);
 
   if (Discounts) {
     Discount = Discounts.length 
