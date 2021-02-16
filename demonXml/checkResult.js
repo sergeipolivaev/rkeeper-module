@@ -26,23 +26,48 @@ async function checkResult(file, path) {
   const commentSplitted = persistentComment.split(" ");
   const code_client = +commentSplitted[commentSplitted.length - 1];
   const guidCorrect = guid.replace(/{|}/g, "");
-  const Discounts = CommandResult.Order.Session.Discount;
-  if (!Discounts) {
-    await removeReq(path, name);
+  const Session = CommandResult.Order.Session;
+  let Discount = [];
+
+  if (Array.isArray(Session)) {
+    Session.forEach(item => {
+      if (Array.isArray(item.Discount)) {
+        Discount.concat(item.Discount);
+      } else {
+        Discount.push(item.Discount);
+      }
+    });
+  } else {
+    if (Array.isArray(Session.Discount)) {
+      Discount.concat(Session.Discount);
+    } else {
+      Discount.push(Session.Discount);
+    }
+  }
+
+  console.log("Discount =>", Discount);
+
+  if (!Discount.length) {
+    console.log("not discounts");
     await removeRes(path, name);
+    await removeReq(path, name);
     return;
   }
 
-  let Discount;
+  Discount = Discount.filter(item => item && !+item._attributes.deleted)
+  if (!Discount || !Discount.length) {
+    await removeRes(path, name);
+    await removeReq(path, name);
+    return;
+  }
+
+  Discount = Discount.map(item => item._attributes);
   let code, amount;
 
-  console.log("Session =>", CommandResult.Order.Session);
-  console.log("Discount =>", Discounts);
-
-  if (Discounts) {
-    Discount = Discounts.length 
-      ? Discounts[Discounts.length - 1]._attributes
-      : Discounts._attributes
+  if (Discount) {
+    Discount = Discount.length 
+      ? Discount[Discount.length - 1]
+      : Discount
 
     code = Discount.code;
     if (!code) {
