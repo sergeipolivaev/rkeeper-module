@@ -4,6 +4,7 @@ const { promisify } = require("util");
 
 const requestToExe = require("./requestToExe");
 const checkResult = require("./checkResult");
+const sync = require("../sync");
 
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
@@ -34,6 +35,8 @@ async function demon(path = "./", ipKassa, portKassa, discountId) {
     
     await checkResult(fileObject, path, discountId);
   }
+
+  if (await sync()) return;
 
   setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
 }
