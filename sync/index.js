@@ -15,6 +15,7 @@ async function sync() {
     console.log();
     console.log("Update app");
     console.log();
+    await execAsync("npm install", options);
     await execAsync("pm2 start ecosystem.config.js", options);
     await execAsync("pm2 save", options);
     return true;
