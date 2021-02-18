@@ -84,7 +84,7 @@ async function checkResult(file, path, discountId) {
       Authorization: token
     } 
   };
-  const [err] = await to(axios.post("https://dev.ldqr.ru/api/rkeeper/createTransaction", body, config));
+  const [err] = await to(axios.post("https://api.ldqr.ru/api/rkeeper/createTransaction", body, config));
   if (err) throw httpError(500, "");
 
   await removeReq(path, name);
