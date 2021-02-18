@@ -17,7 +17,7 @@ async function sync() {
     console.log();
     console.log("Update app");
     console.log();
-    await execAsync("start cmd /c reload.bat", options);
+    await execAsync("start cmd /k reload.bat", options);
     return true;
   }
 
