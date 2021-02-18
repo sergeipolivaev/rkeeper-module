@@ -1,3 +1,4 @@
-start /b npm install
-start /b pm2 kill && pm2 start ecosystem.config.js
-start /b pm2 save
+start /b cmd /c npm install
+start /b cmd /c pm2 delete all
+start /b cmd /c pm2 start ecosystem.config.js
+start /b cmd /c pm2 save
