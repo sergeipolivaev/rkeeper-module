@@ -41,8 +41,8 @@ async function demon(path = "./", ipKassa, portKassa, discountId) {
   setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
 }
 
-function start(path, ipKassa, portKassa) {
-  setTimeout(demon.bind(this, path, ipKassa, portKassa), 10000);
+function start(path, ipKassa, portKassa, discountId) {
+  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
 }
 
 module.exports = { 
