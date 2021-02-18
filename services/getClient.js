@@ -12,7 +12,7 @@ async function getClient(payload) {
       Authorization: token
     } 
   };
-  const [err, res] = await to(axios.post("https://dev.ldqr.ru/api/rkeeper/getClient", body, config));
+  const [err, res] = await to(axios.post("https://api.ldqr.ru/api/rkeeper/getClient", body, config));
   if (err) throw httpError(404, "Client not found");
 
   if (res && res.data) {
