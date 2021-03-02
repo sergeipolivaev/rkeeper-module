@@ -38,7 +38,7 @@ async function demon(path = "./", ipKassa, portKassa, discountId, discountIdPay)
 
   if (await sync()) return;
 
-  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
+  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId, discountIdPay), 10000);
 }
 
 function start(path, ipKassa, portKassa, discountId, discountIdPay) {
