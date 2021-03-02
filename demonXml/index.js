@@ -9,7 +9,7 @@ const sync = require("../sync");
 const readFileAsync = promisify(readFile);
 const readDirAsync = promisify(readdir);
 
-async function demon(path = "./", ipKassa, portKassa, discountId) {
+async function demon(path = "./", ipKassa, portKassa, discountId, discountIdPay) {
   let filesInDir = await readDirAsync(path);
   const filesXml = filesInDir.filter(filename => /^(?!.*Res).*.xml/g.test(filename));
 
@@ -33,7 +33,7 @@ async function demon(path = "./", ipKassa, portKassa, discountId) {
       content: xml2js(file, { compact: true })
     };
     
-    await checkResult(fileObject, path, discountId);
+    await checkResult(fileObject, path, discountId, discountIdPay);
   }
 
   if (await sync()) return;
@@ -41,8 +41,8 @@ async function demon(path = "./", ipKassa, portKassa, discountId) {
   setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
 }
 
-function start(path, ipKassa, portKassa, discountId) {
-  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId), 10000);
+function start(path, ipKassa, portKassa, discountId, discountIdPay) {
+  setTimeout(demon.bind(this, path, ipKassa, portKassa, discountId, discountIdPay), 10000);
 }
 
 module.exports = { 

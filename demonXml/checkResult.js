@@ -6,7 +6,7 @@ const httpError = require("http-errors");
 
 const unlinkAsync = promisify(unlink);
 
-async function checkResult(file, path, discountId) {
+async function checkResult(file, path, discountId, discountIdPay) {
   const token = process.env.TOKEN;
   const { name, content } = file;
   const { CommandResult } = content.RK7QueryResult;
@@ -54,7 +54,8 @@ async function checkResult(file, path, discountId) {
   Discount = Discount.filter(item => 
     item && 
     !+item._attributes.deleted && 
-    item._attributes.code == discountId
+    (item._attributes.code == discountId || 
+      item._attributes.code == discountIdPay)
   )
 
   if (!Discount || !Discount.length) {

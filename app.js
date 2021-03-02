@@ -7,13 +7,14 @@ const path = require("path");
 const routes = require("./routes");
 const { start } = require("./demonXml");
 
-const { IP, PORT, IPKASSA, PORTKASSA, DISCOUNTID } = process.env;
+const { IP, PORT, IPKASSA, PORTKASSA, DISCOUNTID, DISCOUNTIDPAY } = process.env;
 
 const ipServer = IP || "0.0.0.0";
 const portServer = PORT || 9056;
 const ipKassa = IPKASSA;
 const portKassa = PORTKASSA;
 const discountId = DISCOUNTID;
+const discountIdPay = DISCOUNTIDPAY;
 
 const server = http.createServer;
 const app = express();
@@ -34,7 +35,7 @@ server(app).listen(app.get("port"), app.get("ip"), (err) => {
   console.log("Press CTRL-C to stop\n");
 });
 
-start(path.resolve("./xml"), ipKassa, portKassa, discountId);
+start(path.resolve("./xml"), ipKassa, portKassa, discountId, discountIdPay);
 
 function defaultContentTypeMiddleware (req, res, next) {
   req.headers["content-type"] = req.headers["content-type"] || "application/json";
