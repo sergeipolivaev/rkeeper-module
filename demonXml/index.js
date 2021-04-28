@@ -33,7 +33,11 @@ async function demon(path = "./", ipKassa, portKassa, discountId, discountIdPay)
       content: xml2js(file, { compact: true })
     };
     
-    await checkResult(fileObject, path, discountId, discountIdPay);
+    try {
+      await checkResult(fileObject, path, discountId, discountIdPay);
+    } catch(err) {
+      console.log(`Check result error`, err);
+    }
   }
 
   if (await sync()) return;
