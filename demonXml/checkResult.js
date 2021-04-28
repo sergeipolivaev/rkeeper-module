@@ -29,6 +29,12 @@ async function checkResult(file, path, discountId, discountIdPay) {
   let Discount = [];
   let amount = -discountSum / 100;
 
+  if (!Session) {
+    await removeRes(path, name);
+    await removeReq(path, name);
+    return;
+  }
+
   if (Array.isArray(Session)) {
     Session.forEach(item => {
       if (Array.isArray(item.Discount)) {
