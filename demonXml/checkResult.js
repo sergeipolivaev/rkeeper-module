@@ -91,8 +91,9 @@ async function checkResult(file, path, discountId, discountIdPay) {
       Authorization: token
     } 
   };
-  const [err] = await to(axios.post("https://api.ldqr.ru/api/rkeeper/createTransaction", body, config));
+  const [err, res] = await to(axios.post("https://api.ldqr.ru/api/rkeeper/createTransaction", body, config));
   if (err) throw httpError(500, "");
+  console.log(`Transaction to Backend`, err, res);
 
   await removeReq(path, name);
   await removeRes(path, name);
