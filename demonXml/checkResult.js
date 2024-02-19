@@ -27,7 +27,7 @@ async function checkResult(file, path, discountId, discountIdPay) {
   const guidCorrect = guid.replace(/{|}/g, "");
   const Session = CommandResult.Order.Session;
   let Discount = [];
-  let amount = -discountSum / 100;
+  const discountAmount = -discountSum / 100;
 
   if (!Session) {
     await removeRes(path, name);
@@ -70,10 +70,10 @@ async function checkResult(file, path, discountId, discountIdPay) {
     return;
   }
 
-  Discount = Discount.map(item => item._attributes);
-  Discount = Discount[Discount.length - 1];
+  const discountAttributes = Discount.map(item => item._attributes);
+  const discountLdr = discountAttributes[discountAttributes.length - 1];
 
-  const code = Discount.code;
+  const code = discountLdr.code;
   if (!code) {
     await removeRes(path, name);
     return
@@ -83,8 +83,8 @@ async function checkResult(file, path, discountId, discountIdPay) {
 
   const body = { 
     company_number: code_client,
-    sum_order: orderSum / 100 + amount,
-    payed_bonus: amount
+    sum_order: orderSum / 100 + discountAmount,
+    payed_bonus: (-discountLdr.amount || 0) / 100,
   };
   const config = {
     headers: {
